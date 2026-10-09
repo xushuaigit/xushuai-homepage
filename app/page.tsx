@@ -232,6 +232,17 @@ function SentenceCopy({
   );
 }
 
+function SectionArrow() {
+  return (
+    <ArrowDown
+      className={styles.sectionArrow}
+      size={18}
+      strokeWidth={1.8}
+      aria-hidden="true"
+    />
+  );
+}
+
 export default function AppleDemoPage() {
   return (
     <div className={styles.page} data-apple-demo lang="zh-CN">
@@ -309,7 +320,7 @@ export default function AppleDemoPage() {
                     <span className={styles.heroChapterDescription}>
                       {chapter.description}
                     </span>
-                    <ArrowDown size={18} strokeWidth={1.8} aria-hidden="true" />
+                    <SectionArrow />
                   </a>
                 ))}
               </nav>
@@ -347,15 +358,11 @@ export default function AppleDemoPage() {
                 <div className={styles.aboutActions}>
                   <a href="#stories" className={styles.aboutPrimary}>
                     看项目实践
-                    <ArrowDown size={17} strokeWidth={1.8} aria-hidden="true" />
+                    <SectionArrow />
                   </a>
                   <a href="#contact" className={styles.aboutSecondary}>
                     聊聊合作
-                    <ArrowUpRight
-                      size={17}
-                      strokeWidth={1.8}
-                      aria-hidden="true"
-                    />
+                    <SectionArrow />
                   </a>
                 </div>
               </div>
@@ -388,7 +395,7 @@ export default function AppleDemoPage() {
                 </ol>
                 <a className={styles.careerLink} href="#career">
                   查看完整经历与专业背景
-                  <ArrowDown size={16} aria-hidden="true" />
+                  <SectionArrow />
                 </a>
               </aside>
             </div>
@@ -639,11 +646,7 @@ export default function AppleDemoPage() {
                             aria-label={`交流「${story.label}」实践`}
                             title="交流这一实践"
                           >
-                            <ArrowUpRight
-                              size={28}
-                              strokeWidth={1.4}
-                              aria-hidden="true"
-                            />
+                            <SectionArrow />
                           </a>
                         </article>
                       ))}
