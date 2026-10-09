@@ -10,6 +10,7 @@ import type { Metadata } from 'next';
 
 import { appleHomepage as homepageDemo } from '../lib/apple-homepage';
 import styles from './apple.module.css';
+import BackToTop from './back-to-top';
 
 export const metadata: Metadata = {
   title: `${homepageDemo.name} · 个人网站`,
@@ -772,6 +773,7 @@ export default function AppleDemoPage() {
           <a href="#content">返回顶部</a>
         </div>
       </footer>
+      <BackToTop />
     </div>
   );
 }
