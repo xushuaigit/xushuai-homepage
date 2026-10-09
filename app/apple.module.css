@@ -177,11 +177,15 @@
   align-items: center;
 }
 
+.firstScreen > .hero {
+  flex-grow: 0;
+}
+
 .hero {
   position: relative;
   overflow: hidden;
-  padding: 72px 24px 20px;
-  padding: clamp(68px, 8svh, 88px) 24px clamp(18px, 2.5svh, 28px);
+  padding: 72px 24px 0;
+  padding: clamp(68px, 8svh, 88px) 24px 0;
   background:
     radial-gradient(circle at 50% 90%, rgb(73 73 79 / 40%), transparent 38%),
     #000;
@@ -305,11 +309,11 @@
 .heroChapter {
   display: grid;
   grid-template-columns: 18px minmax(0, 1fr) 18px;
-  align-content: start;
+  align-content: center;
   column-gap: 12px;
   row-gap: 2px;
   min-height: 60px;
-  padding: 14px 20px 4px;
+  padding: 14px 20px;
 }
 
 .heroChapter + .heroChapter {
@@ -340,6 +344,10 @@
 
 .heroChapter:hover .heroChapterTitle {
   color: #2997ff;
+}
+
+.page .heroChapter:focus-visible {
+  outline-offset: -5px;
 }
 
 .about {
@@ -1248,7 +1256,7 @@
   }
 
   .hero {
-    padding: 78px 18px 32px;
+    padding: 78px 18px 0;
   }
 
   .heroContext {
