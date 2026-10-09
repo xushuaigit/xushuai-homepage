@@ -277,7 +277,6 @@ export default function AppleDemoPage() {
                 <p className={styles.heroCopy}>
                   <SentenceCopy
                     text="我从业务问题出发，推动业产研一体化，让业务目标贯穿产品决策与研发交付。理清优先级与团队责任，让管理层掌握进展与风险，也为数字化打好协作基础。"
-                    omitEndPunctuation
                     terms={[
                       '业产研一体化',
                       '产品决策',
@@ -293,7 +292,6 @@ export default function AppleDemoPage() {
                   <SentenceCopy
                     text="AI 应用也从具体业务工作切入，着眼于减少重复劳动、缩短处理时间。成效如何，最终看业务工作中的实际变化。"
                     terms={['减少重复劳动', '缩短处理时间']}
-                    omitEndPunctuation
                   />
                 </p>
               </div>
