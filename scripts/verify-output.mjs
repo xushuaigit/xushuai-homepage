@@ -91,10 +91,15 @@ const elementCount = (tag, id) => [...visibleHtml.matchAll(new RegExp(
   `<${tag}\\b[^>]*\\bid="${id}"`, 'gu',
 ))].length;
 
-for (const id of caseIds) assert.equal(elementCount('article', id), 1, `Expected one case: ${id}`);
+for (const id of caseIds) {
+  assert.equal(elementCount('article', id), 1, `Expected one case: ${id}`);
+  assert.equal(elementCount('details', `${id}-details`), 1, `Expected one expandable case card: ${id}`);
+  const disclosure = visibleHtml.match(new RegExp(`<details\\b[^>]*\\bid="${id}-details"[^>]*>`, 'u'))?.[0];
+  assert(disclosure && !/\sopen(?:\s|=|>)/u.test(disclosure), `Case card should start collapsed: ${id}`);
+}
 for (const id of layerIds) assert.equal(elementCount('section', `stories-${id}`), 1, `Expected one layer: ${id}`);
 for (const id of careerIds) assert.equal(elementCount('details', `career-${id}`), 1, `Expected one experience: ${id}`);
-assert.equal([...visibleHtml.matchAll(/<details\b/gu)].length, 5, 'Expected five native experience panels.');
+assert.equal([...visibleHtml.matchAll(/<details\b/gu)].length, 10, 'Expected five case cards and five native experience panels.');
 
 const ids = [...visibleHtml.matchAll(/\bid="([^"]+)"/gu)].map((match) => match[1]);
 assert.equal(new Set(ids).size, ids.length, 'Duplicate HTML IDs found.');

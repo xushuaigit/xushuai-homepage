@@ -572,82 +572,87 @@ export default function AppleDemoPage() {
                           id={story.id}
                           key={story.id}
                         >
-                          <div className={styles.storyMeta}>
-                            <p>
-                              <StoryTitle
-                                title={story.label}
-                                terms={['AI Agent', '业务落地']}
-                              />
-                            </p>
-                            <small>
-                              <StoryTitle
-                                title={
-                                  organizationDisplayNames[
-                                    story.organization
-                                  ] ?? story.organization
-                                }
-                                terms={[
-                                  '保时捷数字科技',
-                                  '独立顾问',
-                                  '跨境电商客户',
-                                ]}
-                              />
-                            </small>
-                          </div>
-                          <div className={styles.storyBody}>
-                            <h4>
-                              <StoryTitle
-                                title={story.title.replace(/[，。]+$/u, '')}
-                                terms={storyTitleTerms[story.id]}
-                              />
-                            </h4>
-                            <p>
-                              <span className={styles.storyFieldLabel}>
-                                问题
-                              </span>
-                              <SentenceCopy text={story.problem} />
-                            </p>
-                            <p>
-                              <span className={styles.storyFieldLabel}>
-                                行动
-                              </span>
-                              <SentenceCopy
-                                text={story.contribution}
-                                terms={[
-                                  'Scrum@Scale',
-                                  'ART 级 RTE',
-                                  '新人 AI 陪练。',
-                                ]}
-                                splitSemicolons
-                              />
-                            </p>
-                            <strong>
-                              <span className={styles.storyFieldLabel}>
-                                结果
-                              </span>
-                              <SentenceCopy
-                                text={story.result}
-                                terms={[
-                                  '80%',
-                                  '3–6 个月',
-                                  '7 个工作日',
-                                  '14 个工作日',
-                                  '4 个工作日',
-                                  '85%–90%',
-                                  '1 小时',
-                                  '10 分钟',
-                                ]}
-                              />
-                            </strong>
-                          </div>
-                          <a
-                            className={styles.storyAction}
-                            href="#contact"
-                            aria-label={`交流「${story.label}」实践`}
-                            title="交流这一实践"
+                          <details
+                            className={styles.storyDisclosure}
+                            id={`${story.id}-details`}
                           >
-                            <SectionArrow />
-                          </a>
+                            <summary className={styles.storySummary}>
+                              <span className={styles.storyMeta}>
+                                <span>
+                                  <StoryTitle
+                                    title={story.label}
+                                    terms={['AI Agent', '业务落地']}
+                                  />
+                                </span>
+                                <small>
+                                  <StoryTitle
+                                    title={
+                                      organizationDisplayNames[
+                                        story.organization
+                                      ] ?? story.organization
+                                    }
+                                    terms={[
+                                      '保时捷数字科技',
+                                      '独立顾问',
+                                      '跨境电商客户',
+                                    ]}
+                                  />
+                                </small>
+                              </span>
+                              <h4>
+                                <StoryTitle
+                                  title={story.title.replace(/[，。]+$/u, '')}
+                                  terms={storyTitleTerms[story.id]}
+                                />
+                              </h4>
+                              <span
+                                className={styles.storyAction}
+                                aria-hidden="true"
+                              >
+                                <SectionArrow />
+                              </span>
+                            </summary>
+                            <div className={styles.storyBody}>
+                              <p>
+                                <span className={styles.storyFieldLabel}>
+                                  问题
+                                </span>
+                                <SentenceCopy text={story.problem} />
+                              </p>
+                              <p>
+                                <span className={styles.storyFieldLabel}>
+                                  行动
+                                </span>
+                                <SentenceCopy
+                                  text={story.contribution}
+                                  terms={[
+                                    'Scrum@Scale',
+                                    'ART 级 RTE',
+                                    '新人 AI 陪练。',
+                                  ]}
+                                  splitSemicolons
+                                />
+                              </p>
+                              <strong>
+                                <span className={styles.storyFieldLabel}>
+                                  结果
+                                </span>
+                                <SentenceCopy
+                                  text={story.result}
+                                  terms={[
+                                    '80%',
+                                    '3–6 个月',
+                                    '7 个工作日',
+                                    '14 个工作日',
+                                    '4 个工作日',
+                                    '85%–90%',
+                                    '1 小时',
+                                    '10 分钟',
+                                  ]}
+                                />
+                              </strong>
+                            </div>
+                          </details>
                         </article>
                       ))}
                   </div>
