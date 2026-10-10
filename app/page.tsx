@@ -263,6 +263,9 @@ export default function AppleDemoPage() {
             <a href="#about">关于我</a>
             <a href="#approach">工作方式</a>
             <a href="#stories">代表实践</a>
+            <a href="./pmo.html" className={styles.pmoNavLink}>
+              PMO 脑图
+            </a>
           </nav>
           <a className={styles.navAction} href="#contact">
             联系我

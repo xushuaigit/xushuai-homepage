@@ -147,6 +147,10 @@
   transition: color 180ms ease;
 }
 
+.pmoNavLink {
+  white-space: nowrap;
+}
+
 .nav a:hover,
 .navAction:hover {
   color: white;
@@ -1298,6 +1302,10 @@
   }
 
   .nav {
+    gap: 0;
+  }
+
+  .nav a:not(.pmoNavLink) {
     display: none;
   }
 
