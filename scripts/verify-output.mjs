@@ -224,8 +224,8 @@ assert(
 );
 
 assert(
-  /href="\.\/pmo\.html"/u.test(visibleHtml),
-  'The homepage PMO link is missing.',
+  !/href="\.\/pmo\.html"/u.test(visibleHtml),
+  'The homepage must only link to the latest PMO system.',
 );
 assert(/href="\.\/pmo-system\.html"/u.test(visibleHtml), 'The complete PMO-system link is missing.');
 const pmoSystemHtml = readFileSync(path.join(outputRoot, 'pmo-system.html'), 'utf8');
@@ -248,52 +248,10 @@ for (const name of ['pmo-system.json','pmo-system.md','pmo-system.xmind','pmo-sy
   assert(existsSync(path.join(outputRoot, 'downloads/pmo-system', name)), 'Missing PMO-system backup: ' + name);
 }
 const pmoHtml = readFileSync(path.join(outputRoot, 'pmo.html'), 'utf8');
-const pmoData = JSON.parse(
-  pmoHtml.match(
-    /<script id="pmoData" type="application\/json">([\s\S]*?)<\/script>/u,
-  )?.[1] || 'null',
-);
-assert(pmoData?.tree, 'The mind map data is missing.');
-assert.equal(
-  pmoData.tree.children.length,
-  8,
-  'Expected eight mind map branches.',
-);
-const pmoNodes = [];
-function collectPmoNodes(node) {
-  pmoNodes.push(node);
-  node.children.forEach(collectPmoNodes);
-}
-collectPmoNodes(pmoData.tree);
-assert.equal(
-  pmoNodes.length,
-  pmoData.count,
-  'Mind map node count does not match its data.',
-);
-assert.equal(
-  new Set(pmoNodes.map((node) => node.id)).size,
-  pmoNodes.length,
-  'Mind map IDs are not unique.',
-);
-assert(
-  !/(?:(?<![a-z])[a-z]:[\\/]|file:\/\/|WorkBuddy|sourceList|"sources"|SOW|V5\.7|Claw|frame22)/iu.test(
-    pmoHtml,
-  ),
-  'A private source reference remains in the mind map.',
-);
-assert(
-  /class="home-link" href="\.\/"/u.test(pmoHtml),
-  'Mind map return link has an incorrect deployment prefix.',
-);
-assert(
-  !/<(?:script|link)\b[^>]*(?:src|href)="https?:/iu.test(pmoHtml),
-  'Mind map has an external dependency.',
-);
-assert.equal(
-  pmoNodes.find((node) => node.id === 'pmo-103')?.status,
-  '归纳',
-  'Illustrative meeting metrics must not be marked as measured practice.',
-);
+assert(!/pmoData|PMO 脑图|原版 PMO/u.test(pmoHtml), 'Legacy PMO content must be removed.');
+assert(/http-equiv="refresh" content="0;url=\.\/pmo-system\.html"/u.test(pmoHtml), 'Legacy PMO URL must redirect to the latest system.');
+assert(/location\.replace\('\.\/pmo-system\.html'\)/u.test(pmoHtml), 'The legacy URL JavaScript redirect is missing.');
+assert(!/href="\.\/pmo\.html"|原版 PMO/u.test(pmoSystemHtml), 'The latest page must not link to the legacy PMO.');
 
 function assertPublishedAsset(url, description) {
   const decoded = decodeHtml(url);
@@ -373,9 +331,10 @@ console.log(
       static404: true,
       additionalDemos: false,
       mindMap: {
-        branches: pmoData.tree.children.length,
-        nodes: pmoNodes.length,
+        branches: pmoSystem.modules.length,
+        nodes: systemNodes.length,
         privateSources: false,
+        legacyUrlRedirect: true,
       },
     },
     null,
