@@ -241,14 +241,19 @@ assert.equal(pmoSystem.gates.length, 8);
 assert.equal(pmoSystem.metrics.length, 19);
 assert.equal(pmoSystem.templates.length, 28);
 assert(pmoSystem.raci.every(row => row.A.length === 1));
-assert(!/<header\b/u.test(pmoSystemHtml), 'The removed top header reappeared.');
+assert.equal([...pmoSystemHtml.matchAll(/<header\b/gu)].length, 1, 'The PMO page must reuse one homepage header.');
+assert(/<header class="site-header">/u.test(pmoSystemHtml), 'The personal website header is missing.');
+assert(!/class="top-controls"|id="search"|class="version"/u.test(pmoSystemHtml), 'The old PMO controls returned.');
 assert(!/(?:(?<![a-z])[a-z]:[\\/]|file:\/\/|WorkBuddy|SOW|V5\.7|Claw)/iu.test(pmoSystemHtml), 'Private PMO-system source information remains.');
 assert(!/<(?:script|link)\b[^>]*(?:src|href)="https?:/iu.test(pmoSystemHtml), 'The complete system has an external dependency.');
 for (const name of ['pmo-system.json','pmo-system.md','pmo-system.xmind','pmo-system-backup.zip']) {
   assert(!existsSync(path.join(outputRoot, 'downloads/pmo-system', name)), 'The view-only site still publishes a download: ' + name);
 }
 assert(!/\bdownload\b|downloads\/|下载|createObjectURL|new Blob|window\.print/iu.test(pmoSystemHtml), 'The PMO page must only provide viewing.');
-assert(/class="home-button" href="\.\/"/u.test(pmoSystemHtml), 'The PMO return button is missing.');
+assert(/class="site-brand"\s+href="\.\/"\s+aria-label="返回个人网站"/u.test(pmoSystemHtml), 'The homepage brand must return to the personal website.');
+for (const anchor of ['about', 'approach', 'stories', 'contact']) {
+  assert(pmoSystemHtml.includes('href="./#' + anchor + '"'), 'A homepage navigation target is missing: ' + anchor);
+}
 assert(!/<aside class="side">|<nav class="nav"/u.test(pmoSystemHtml), 'The removed sidebar returned.');
 const viewSwitch = pmoSystemHtml.match(/<select id="view-switch"[^>]*>([\s\S]*?)<\/select>/u)?.[1] || '';
 assert.equal([...viewSwitch.matchAll(/<option value=/gu)].length, 9, 'The compact view switch must reach every section.');
