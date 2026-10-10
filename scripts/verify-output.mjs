@@ -202,6 +202,7 @@ assert(
 const allowedHtml = new Set([
   'index.html',
   'pmo.html',
+  'pmo-system.html',
   '404.html',
   '404/index.html',
 ]);
@@ -226,6 +227,26 @@ assert(
   /href="\.\/pmo\.html"/u.test(visibleHtml),
   'The homepage PMO link is missing.',
 );
+assert(/href="\.\/pmo-system\.html"/u.test(visibleHtml), 'The complete PMO-system link is missing.');
+const pmoSystemHtml = readFileSync(path.join(outputRoot, 'pmo-system.html'), 'utf8');
+const pmoSystem = JSON.parse(pmoSystemHtml.match(/<script id="system-data" type="application\/json">([\s\S]*?)<\/script>/u)?.[1] || 'null');
+assert.equal(pmoSystem?.modules?.length, 10, 'Expected ten complete-system modules.');
+const systemNodes = [];
+function visitSystem(node) { systemNodes.push(node); node.children.forEach(visitSystem); }
+visitSystem(pmoSystem.root);
+assert.equal(systemNodes.length, 255);
+assert.equal(new Set(systemNodes.map(n => n.id)).size, 255);
+assert.equal(pmoSystem.mechanisms.length, 30);
+assert.equal(pmoSystem.gates.length, 8);
+assert.equal(pmoSystem.metrics.length, 19);
+assert.equal(pmoSystem.templates.length, 28);
+assert(pmoSystem.raci.every(row => row.A.length === 1));
+assert(!/<header\b/u.test(pmoSystemHtml), 'The removed top header reappeared.');
+assert(!/(?:(?<![a-z])[a-z]:[\\/]|file:\/\/|WorkBuddy|SOW|V5\.7|Claw)/iu.test(pmoSystemHtml), 'Private PMO-system source information remains.');
+assert(!/<(?:script|link)\b[^>]*(?:src|href)="https?:/iu.test(pmoSystemHtml), 'The complete system has an external dependency.');
+for (const name of ['pmo-system.json','pmo-system.md','pmo-system.xmind','pmo-system-backup.zip']) {
+  assert(existsSync(path.join(outputRoot, 'downloads/pmo-system', name)), 'Missing PMO-system backup: ' + name);
+}
 const pmoHtml = readFileSync(path.join(outputRoot, 'pmo.html'), 'utf8');
 const pmoData = JSON.parse(
   pmoHtml.match(
