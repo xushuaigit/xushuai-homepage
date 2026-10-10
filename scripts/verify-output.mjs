@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import path from 'node:path';
+import vm from 'node:vm';
 import { fileURLToPath } from 'node:url';
 import ts from 'typescript';
 import nextConfig, { pagesBasePath } from '../next.config.mjs';
@@ -255,8 +256,49 @@ for (const anchor of ['about', 'approach', 'stories', 'contact']) {
   assert(pmoSystemHtml.includes('href="./#' + anchor + '"'), 'A homepage navigation target is missing: ' + anchor);
 }
 assert(!/<aside class="side">|<nav class="nav"/u.test(pmoSystemHtml), 'The removed sidebar returned.');
-const viewSwitch = pmoSystemHtml.match(/<select id="view-switch"[^>]*>([\s\S]*?)<\/select>/u)?.[1] || '';
-assert.equal([...viewSwitch.matchAll(/<option value=/gu)].length, 9, 'The compact view switch must reach every section.');
+assert(!pmoSystemHtml.includes('view-switch'), 'The removed view switch returned.');
+const pmoViews = ['overview', 'mindmap', 'mechanisms', 'gates', 'roles', 'metrics', 'templates', 'rollout', 'evidence'];
+for (const view of pmoViews) {
+  assert.equal([...pmoSystemHtml.matchAll(new RegExp(`<section id="${view}"[^>]*class="view(?: active)?"`, 'gu'))].length, 1, 'Expected one single-page section: ' + view);
+}
+assert(/\.view\s*\{[^}]*display\s*:\s*block/u.test(pmoSystemHtml), 'Single-page sections must be displayed.');
+assert(!/\.view\s*\{[^}]*display\s*:\s*none/u.test(pmoSystemHtml), 'Single-page sections must not be hidden.');
+const pmoRuntime = [...pmoSystemHtml.matchAll(/<script(?:\s[^>]*)?>([\s\S]*?)<\/script>/gu)]
+  .filter(match => !/type="application\/json"/u.test(match[0]))
+  .map(match => match[1]).join('\n');
+const pmoRuntimeSource = ts.createSourceFile('pmo-runtime.js', pmoRuntime, ts.ScriptTarget.Latest, true, ts.ScriptKind.JS);
+const pmoFunctions = new Map(pmoRuntimeSource.statements.filter(ts.isFunctionDeclaration).map(node => [node.name?.text, node.getText(pmoRuntimeSource)]));
+for (const name of ['nodeCard', 'moduleCard', 'focusCard', 'jumpModule', 'followHash']) {
+  assert(pmoFunctions.has(name), 'The single-page card function is missing: ' + name);
+}
+assert(pmoFunctions.get('nodeCard').includes('node.children.map(nodeCard)'), 'Every nested node must remain accessible as a card.');
+assert(pmoFunctions.get('focusCard').includes("parent.tagName==='DETAILS'") && pmoFunctions.get('focusCard').includes('parent.open=true'), 'Card navigation must expand parent disclosures.');
+assert(pmoFunctions.get('focusCard').includes('element.open=true') && pmoFunctions.get('focusCard').includes('element.focus({preventScroll:true})'), 'Card navigation must expand and focus its target.');
+assert(pmoFunctions.get('jumpModule').includes("$('module-'+id)") && pmoFunctions.get('jumpModule').includes('firstBranch.open=true') && pmoFunctions.get('jumpModule').includes('focusCard(card)'), 'Module navigation must open and focus the matching card.');
+assert(pmoFunctions.get('followHash').includes("view==='mindmap'&&id"), 'Existing mindmap deep links must continue to work.');
+const cardOutput = { innerHTML: '' };
+const cardContext = vm.createContext({
+  DATA: pmoSystem,
+  $: id => { assert.equal(id, 'overview'); return cardOutput; },
+  esc: value => String(value).replace(/[&<>"']/gu, character => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[character]),
+  title: value => `<h2>${value}</h2>`,
+  tag: () => '',
+  list: () => '',
+});
+vm.runInContext(['disclosureArrow', 'nodeCard', 'moduleCard', 'overviewDiagram', 'renderOverview'].map(name => {
+  assert(pmoFunctions.has(name), 'The overview card renderer is missing: ' + name);
+  return pmoFunctions.get(name);
+}).join('\n') + '\nrenderOverview();', cardContext, { timeout: 1000 });
+assert(!/class="(?:stats|stat)"/u.test(cardOutput.innerHTML), 'The removed overview statistics returned.');
+const cardNodeIds = [...cardOutput.innerHTML.matchAll(/data-node-id="([^"]+)"/gu)].map(match => match[1]);
+assert.equal(cardNodeIds.length, systemNodes.length, 'Every PMO node must have a single-page card.');
+assert.equal(new Set(cardNodeIds).size, systemNodes.length, 'Duplicate PMO node cards found.');
+for (const node of systemNodes) assert(cardNodeIds.includes(node.id), 'A PMO node card is missing: ' + node.id);
+for (const module of pmoSystem.modules) {
+  assert(cardOutput.innerHTML.includes(`id="module-${module.id}"`), 'A module card is missing: ' + module.id);
+  assert(cardOutput.innerHTML.includes(`href="#module-${module.id}"`), 'A module card link is missing: ' + module.id);
+}
+assert(pmoFunctions.get('renderEvidence').includes('class="stats"'), 'Source-scope statistics must remain available.');
 assert(/<details class="reading-help"><summary>阅读说明<\/summary>/u.test(pmoSystemHtml), 'Reading help must start collapsed.');
 assert(/class="map-branch/u.test(pmoSystemHtml), 'The overview mindmap must contain connected branches.');
 assert(existsSync(path.join(outputRoot, 'fonts/apple-demo-sans.woff2')), 'The PMO site font is missing.');
@@ -349,6 +391,9 @@ console.log(
         privateSources: false,
         legacyUrlRedirect: true,
         viewOnly: true,
+        singlePageCards: true,
+        viewSwitchRemoved: true,
+        overviewStatsRemoved: true,
       },
     },
     null,
