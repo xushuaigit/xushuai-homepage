@@ -56,28 +56,76 @@ select:focus-visible, [tabindex]:focus-visible {
 }
 h1, h2, h3 { font-weight: 650; letter-spacing: 0; }
 button:disabled { cursor: default; }
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0; }
 
 .app {
-  display: grid;
-  grid-template-columns: 244px minmax(0, 1fr);
-  width: min(100%, 1800px);
+  width: min(100%, 1296px);
   min-height: 100vh;
   margin-inline: auto;
 }
-.side {
-  position: sticky;
-  top: 0;
-  height: 100vh;
-  height: 100svh;
-  overflow-y: auto;
-  padding: 28px 20px;
+.page-tools {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  margin-bottom: 36px;
+}
+.page-tool-group {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 18px;
+}
+.view-switch { display: inline-flex; min-width: 0; align-items: center; gap: 10px; }
+.view-switch label { color: var(--muted); font-size: 13px; }
+.view-switch select {
+  min-height: 44px;
+  max-width: 100%;
+  padding: 9px 32px 9px 14px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
   background: var(--paper);
-  border-right: 1px solid #e8e8ed;
+  color: var(--ink);
+  font-size: 13px;
+}
+.reading-help { position: relative; color: var(--muted); }
+.reading-help > summary {
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
+  padding: 8px 0 8px 10px;
+  list-style: none;
+  font-size: 12px;
+  white-space: nowrap;
+  cursor: pointer;
+}
+.reading-help > summary::-webkit-details-marker { display: none; }
+.reading-help > summary::after { margin-left: 6px; color: #86868b; content: '+'; }
+.reading-help[open] > summary::after { content: '−'; }
+.reading-help > summary:hover { color: var(--ink); }
+.reading-help > summary:focus-visible { outline: 3px solid #2997ff; outline-offset: 4px; border-radius: 6px; }
+.reading-help .side-note {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  z-index: 30;
+  width: 320px;
+  max-width: calc(100vw - 32px);
+  margin: 0;
+  padding: 20px;
+  border: 1px solid #e8e8ed;
+  border-radius: 18px;
+  background: var(--paper);
+  box-shadow: 0 8px 36px rgb(0 0 0 / 9%);
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.75;
 }
 .home-button {
   display: inline-flex;
   min-height: 48px;
-  width: 100%;
+  flex: none;
   align-items: center;
   justify-content: center;
   gap: 10px;
@@ -92,46 +140,6 @@ button:disabled { cursor: default; }
 }
 .home-button:hover { background: var(--brand-hover); }
 .home-button svg { display: block; width: 18px; height: 18px; flex: none; }
-.side .label {
-  margin: 30px 12px 12px;
-  color: var(--muted);
-  font-size: 13px;
-  font-weight: 600;
-  line-height: 1.5;
-}
-.nav { display: flex; flex-direction: column; gap: 5px; }
-.nav button {
-  display: flex;
-  width: 100%;
-  min-height: 48px;
-  align-items: center;
-  gap: 12px;
-  padding: 11px 12px;
-  border: 0;
-  border-radius: 13px;
-  background: transparent;
-  text-align: left;
-  font-size: 14px;
-  font-weight: 500;
-  line-height: 1.5;
-}
-.nav button:hover { background: var(--bg); }
-.nav button.active { background: var(--soft); color: var(--brand-hover); }
-.nav .num {
-  color: var(--muted);
-  font-size: 11px;
-  font-weight: 500;
-  font-variant-numeric: tabular-nums;
-}
-.nav button.active .num { color: inherit; }
-.side-note {
-  margin-top: 28px;
-  padding: 20px 12px 0;
-  border-top: 1px solid #e8e8ed;
-  color: var(--muted);
-  font-size: 12px;
-  line-height: 1.75;
-}
 .side-note b { color: var(--ink); font-weight: 600; }
 .side-note p { margin: 10px 0 14px; }
 .side-note .legend { gap: 5px; }
@@ -139,7 +147,7 @@ button:disabled { cursor: default; }
 main {
   min-width: 0;
   width: 100%;
-  max-width: 1440px;
+  max-width: 1296px;
   padding: clamp(32px, 3.8vw, 56px) clamp(24px, 3.2vw, 48px) 64px;
 }
 .view { display: none; }
@@ -227,47 +235,76 @@ main {
 .text-link { display: inline-flex; min-height: 44px; align-items: center; padding: 0; border: 0; background: transparent; color: var(--brand-hover); text-align: left; text-decoration: underline; text-underline-offset: 4px; }
 
 .blueprint {
-  display: grid;
-  grid-template-columns: minmax(220px, .7fr) minmax(0, 1.8fr);
-  gap: 24px;
-  padding: 24px;
+  padding: 36px;
   border-radius: var(--radius);
   background: var(--paper);
   box-shadow: 0 3px 22px rgb(0 0 0 / 4%);
 }
+.overview-map {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 220px minmax(0, 1fr);
+  align-items: center;
+  gap: 48px;
+}
 .map-hub {
+  position: relative;
   display: flex;
   min-width: 0;
+  min-height: 152px;
   flex-direction: column;
   justify-content: center;
-  padding: 32px 24px;
-  border-radius: 22px;
-  background: radial-gradient(ellipse at 50% 90%, rgb(73 73 79 / 45%), transparent 65%), #000;
-  color: #fff;
+  padding: 22px 16px;
+  border: 1px solid #accdf5;
+  border-radius: 20px;
+  background: #f4f8ff;
+  color: var(--ink);
   text-align: center;
 }
-.map-eyebrow { color: #a1a1a6; font-size: 13px; font-weight: 600; line-height: 1.5; }
-.map-hub h3 { margin: 18px 0 0; font-size: clamp(24px, 2.1vw, 30px); font-weight: 650; line-height: 1.35; text-wrap: balance; }
-.map-hub p { margin: 18px 0 0; color: #b5b5ba; font-size: 14px; line-height: 1.8; text-wrap: balance; }
-.map-modules { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.map-eyebrow { color: var(--muted); font-size: 11px; font-weight: 500; line-height: 1.5; }
+.map-hub h3 { margin: 10px 0 0; font-size: 24px; font-weight: 650; line-height: 1.35; text-wrap: balance; }
+.map-hub p { margin: 12px 0 0; color: var(--muted); font-size: 12px; line-height: 1.75; text-wrap: balance; }
+.map-branch { position: relative; display: flex; flex-direction: column; gap: 18px; }
+.map-branch::before {
+  position: absolute;
+  top: 37px;
+  bottom: 37px;
+  width: 1px;
+  background: #bfd0e3;
+  content: '';
+}
+.map-branch::after {
+  position: absolute;
+  top: 50%;
+  width: 24px;
+  height: 1px;
+  background: #bfd0e3;
+  content: '';
+}
+.map-left::before { right: -24px; }
+.map-left::after { right: -48px; }
+.map-right::before { left: -24px; }
+.map-right::after { left: -48px; }
 .map-module {
   position: relative;
   display: flex;
   min-width: 0;
-  min-height: 94px;
+  min-height: 74px;
   flex-direction: column;
   align-items: flex-start;
   justify-content: center;
-  gap: 8px;
-  padding: 16px 38px 16px 18px;
-  border: 1px solid transparent;
-  border-radius: 16px;
-  background: var(--bg);
+  gap: 5px;
+  padding: 12px 18px;
+  border: 1px solid #dbe3ed;
+  border-radius: 13px;
+  background: var(--paper);
   text-align: left;
 }
+.map-module::after { position: absolute; top: 50%; width: 24px; height: 1px; background: #bfd0e3; content: ''; }
+.map-left .map-module::after { right: -25px; }
+.map-right .map-module::after { left: -25px; }
 .map-module > span:first-child { color: var(--muted); font-size: 11px; font-weight: 600; line-height: 1.4; }
 .map-module strong { font-size: 16px; font-weight: 600; line-height: 1.5; overflow-wrap: anywhere; }
-.map-module .map-arrow { position: absolute; right: 15px; top: 50%; transform: translateY(-50%); color: var(--brand); font-size: 20px; line-height: 1; }
 .map-module:hover { background: var(--soft); border-color: #c8dffc; }
 .map-module:hover strong { color: var(--brand-hover); }
 .chain { display: flex; flex-wrap: wrap; align-items: stretch; gap: 10px; margin: 22px 0; }
@@ -344,10 +381,8 @@ td .tag { margin-top: 0; }
 .hide { display: none !important; }
 
 @media (max-width: 1200px) {
-  .app { grid-template-columns: 216px minmax(0, 1fr); }
-  .side { padding: 24px 14px; }
   main { padding: 36px 28px 56px; }
-  .blueprint { grid-template-columns: minmax(180px, .7fr) minmax(0, 1.5fr); gap: 18px; padding: 20px; }
+  .blueprint { padding: 28px; }
   .map-module { padding-left: 14px; }
   .map-module strong { font-size: 15px; }
   .mind-layout { grid-template-columns: 1fr; }
@@ -358,45 +393,34 @@ td .tag { margin-top: 0; }
   .field { grid-template-columns: 78px minmax(0, 1fr); gap: 12px; }
 }
 @media (max-width: 1040px) {
-  .blueprint { grid-template-columns: 1fr; }
-  .map-hub { padding: 28px 24px; }
-  .map-hub h3 { margin-top: 12px; }
-  .map-hub p { margin-top: 10px; }
   .record-grid, .module-grid { grid-template-columns: 1fr; }
 }
 @media (max-width: 860px) {
-  html { scroll-padding-top: 140px; }
-  .app { display: block; }
-  .side {
-    position: sticky;
-    top: 0;
-    z-index: 20;
-    width: 100%;
-    height: auto;
-    overflow: visible;
-    padding: 12px 24px 8px;
-    border-right: 0;
-    border-bottom: 1px solid #e2e2e7;
-    background: rgb(255 255 255 / 96%);
-    -webkit-backdrop-filter: blur(18px);
-    backdrop-filter: blur(18px);
-  }
   .home-button { width: auto; min-height: 44px; padding: 11px 17px; font-size: 13px; }
-  .side .label, .side-note { display: none; }
-  .nav { flex-direction: row; gap: 6px; overflow-x: auto; padding: 8px 2px 4px; margin: 0 -2px; overscroll-behavior-x: contain; scrollbar-width: thin; }
-  .nav button { flex: none; width: auto; min-height: 44px; gap: 6px; padding: 10px 14px; border-radius: 999px; white-space: nowrap; font-size: 13px; }
-  .nav .num { display: none; }
   main { max-width: 100%; padding: 32px 24px 48px; }
   .view-title { font-size: clamp(28px, 4.5vw, 34px); }
   .view-desc { margin-bottom: 28px; }
-  .node-detail, .record { scroll-margin-top: 140px; }
+  .blueprint { padding: 24px; }
+  .overview-map { display: flex; flex-direction: column; align-items: stretch; gap: 0; padding-left: 26px; }
+  .overview-map::before { position: absolute; top: 76px; bottom: 37px; left: 0; width: 1px; background: #bfd0e3; content: ''; }
+  .map-hub { order: -1; align-self: flex-start; width: min(100%, 250px); min-height: 152px; margin-bottom: 22px; padding: 22px 18px; }
+  .map-hub::after { position: absolute; top: 50%; left: -26px; width: 25px; height: 1px; background: #bfd0e3; content: ''; }
+  .map-branch { gap: 14px; }
+  .map-left { margin-bottom: 14px; }
+  .map-branch::before, .map-branch::after { display: none; }
+  .map-module { min-height: 74px; padding: 12px 18px; }
+  .map-left .map-module::after, .map-right .map-module::after { right: auto; left: -27px; width: 26px; }
+  .map-module strong { font-size: 16px; }
 }
 @media (max-width: 600px) {
   :root { --radius: 22px; --card-padding: 22px; }
   body { font-size: 15px; }
-  .side { padding: 10px 16px 6px; }
+  .page-tools { flex-wrap: wrap; gap: 12px; margin-bottom: 28px; }
+  .page-tool-group { width: 100%; gap: 16px; justify-content: space-between; }
+  .view-switch { flex: 1; min-width: 0; }
+  .view-switch select { width: 100%; min-width: 0; }
+  .reading-help { flex: none; }
   .home-button { padding-inline: 15px; }
-  .nav button { padding-inline: 13px; }
   main { padding: 28px 16px 40px; }
   .view-title { margin-bottom: 16px; font-size: 28px; line-height: 1.35; text-wrap: pretty; }
   .view-desc { margin-bottom: 24px; font-size: 15px; }
@@ -412,12 +436,14 @@ td .tag { margin-top: 0; }
   .stat b { font-size: 31px; }
   .stat span { margin-top: 6px; font-size: 12px; }
   .grid, .grid.three { grid-template-columns: 1fr; gap: 16px; }
-  .blueprint { gap: 16px; padding: 16px; }
-  .map-hub { padding: 28px 20px; border-radius: 18px; }
-  .map-hub h3 { font-size: 28px; }
-  .map-hub p { font-size: 13px; }
-  .map-modules { grid-template-columns: 1fr; gap: 8px; }
-  .map-module { min-height: 84px; padding: 14px 42px 14px 18px; border-radius: 14px; gap: 6px; }
+  .blueprint { padding: 20px 18px; }
+  .overview-map { padding-left: 20px; }
+  .map-hub { padding: 22px 12px; border-radius: 17px; }
+  .map-hub h3 { font-size: 23px; }
+  .map-hub p { font-size: 12px; }
+  .map-hub::after { left: -20px; width: 19px; }
+  .map-module { min-height: 74px; padding: 12px 14px; border-radius: 12px; gap: 5px; }
+  .map-left .map-module::after, .map-right .map-module::after { left: -21px; width: 20px; }
   .map-module strong { font-size: 16px; }
   .module-grid, .record-grid { gap: 16px; margin-block: 20px; }
   .record-grid { margin-top: 0; }
@@ -456,8 +482,8 @@ td .tag { margin-top: 0; }
 </style>
 </head>
 <body>
-<div class="app"><aside class="side"><a class="home-button" href="./"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 5-7 7 7 7M5 12h14"/></svg><span>返回个人网站</span></a><div class="label">PMO体系</div><nav class="nav" aria-label="体系视图"><button data-view="overview" class="active"><span class="num">01</span>体系总览</button><button data-view="mindmap"><span class="num">02</span>完整体系脑图</button><button data-view="mechanisms"><span class="num">03</span>运行机制</button><button data-view="gates"><span class="num">04</span>交付门禁</button><button data-view="roles"><span class="num">05</span>角色与决策权</button><button data-view="metrics"><span class="num">06</span>度量指标</button><button data-view="templates"><span class="num">07</span>工作模板</button><button data-view="rollout"><span class="num">08</span>建设与试点</button><button data-view="evidence"><span class="num">09</span>范围说明与待补</button></nav><div class="side-note"><b>阅读方式</b><p>先看总览与运行链，再进入脑图或机制卡。每个关键机制都有触发条件、职责、输入输出和决策规则。</p><div class="legend" id="side-legend"></div><p>资料支持说明有材料依据；本体系的实施状态为“设计方案，待试运行”。</p></div></aside>
-<main>
+<div class="app">
+<main><div class="page-tools"><a class="home-button" href="./"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 5-7 7 7 7M5 12h14"/></svg><span>返回个人网站</span></a><div class="page-tool-group"><label class="view-switch"><span class="sr-only">查看内容</span><select id="view-switch" aria-label="查看内容"><option value="overview">体系总览</option><option value="mindmap">完整体系脑图</option><option value="mechanisms">运行机制</option><option value="gates">交付门禁</option><option value="roles">角色与决策权</option><option value="metrics">度量指标</option><option value="templates">工作模板</option><option value="rollout">建设与试点</option><option value="evidence">范围说明与待补</option></select></label><details class="reading-help"><summary>阅读说明</summary><div class="side-note"><b>阅读方式</b><p>先看总览与运行链，再进入脑图或机制卡。每个关键机制都有触发条件、职责、输入输出和决策规则。</p><div class="legend" id="side-legend"></div><p>资料支持说明有材料依据；本体系的实施状态为“设计方案，待试运行”。</p></div></details></div></div>
 <section id="overview" class="view active"></section>
 <section id="mindmap" class="view"></section>
 <section id="mechanisms" class="view"></section>
@@ -493,12 +519,13 @@ function evidenceMarkup(){return ''; }
 function evidenceDetails(item){return item.evidence?.length?'<details class="source-details"><summary>查看资料依据（'+item.evidence.length+'）</summary>'+item.evidence.map(evidenceMarkup).join('')+'</details>':'';}
 function record(item,kind){const name=item.name||item.title||item.activity||item.phase||item.id;const skip=new Set(['id','name','title','activity','phase','module_id','basis','evidence']);return'<article class="card record" id="record-'+esc(item.id)+'"><div class="sub">'+esc(item.id||'')+(item.module_id?' · '+esc(index.get(item.module_id)?.title||item.module_id):'')+'</div><h3>'+esc(name)+'</h3>'+tag(item.basis)+'<dl class="fields">'+Object.entries(item).filter(([k,v])=>!skip.has(k)&&v!==null&&v!==''&&(!Array.isArray(v)||v.length)).map(([k,v])=>'<div class="field"><dt>'+esc(labels[k]||k)+'</dt><dd>'+fieldValue(k,v)+'</dd></div>').join('')+'</dl>'+evidenceDetails(item)+'</article>';}
 function overviewDiagram(){
-  return '<div class="map-hub"><span class="map-eyebrow">业产研一体化</span><h3>PMO协同中枢</h3><p>准备决策 · 设计规则<br>推动协同与稳定交付</p></div><div class="map-modules">'+DATA.modules.map(m=>'<button class="map-module" data-node="'+esc(m.id)+'" aria-label="打开'+esc(m.title)+'"><span>'+esc(m.id)+'</span><strong>'+esc(m.title)+'</strong><span class="map-arrow" aria-hidden="true">→</span></button>').join('')+'</div>';
+  const moduleButton=m=>'<button class="map-module" data-node="'+esc(m.id)+'" aria-label="打开'+esc(m.title)+'"><span>'+esc(m.id)+'</span><strong>'+esc(m.title)+'</strong></button>';
+  return '<div class="overview-map" aria-label="PMO中枢与十个运行模块"><div class="map-branch map-left">'+DATA.modules.slice(0,5).map(moduleButton).join('')+'</div><div class="map-hub"><span class="map-eyebrow">业产研一体化</span><h3>PMO协同中枢</h3><p>准备决策 · 设计规则<br>推动协同</p></div><div class="map-branch map-right">'+DATA.modules.slice(5).map(moduleButton).join('')+'</div></div>';
 }
 
 function renderOverview(){const nodes=index.size;$('overview').innerHTML=title('一套从业务问题到稳定交付的PMO体系')+'<article class="card hero"><h2>'+esc(DATA.positioning)+'</h2><p>'+esc(DATA.purpose)+'</p><p class="small muted">'+esc(DATA.usage_note)+'</p></article><div class="stats">'+[[10,'体系模块'],[nodes,'脑图节点'],[DATA.mechanisms.length,'运行机制'],[DATA.gates.length,'交付关口'],[DATA.templates.length,'工作模板']].map(([n,t])=>'<div class="stat"><b>'+n+'</b><span>'+t+'</span></div>').join('')+'</div><div class="blueprint" role="group" aria-label="PMO与十个运行模块">'+overviewDiagram()+'</div><article class="card" style="margin-top:20px"><h2>一条端到端运行链</h2><div class="chain">'+DATA.lifecycle.map((x,i)=>'<button class="chain-step" data-node="'+x.module_id+'"><span>'+String(i+1).padStart(2,'0')+'</span><b>'+esc(x.name)+'</b></button>').join('')+'</div><p class="small muted">变更回到排序与容量决策；缺陷回到交付与稳定性；复盘行动回到下一轮改进。持续产品采用版本复盘，项目采用结项和交接。</p></article><div class="module-grid">'+DATA.modules.map(m=>'<article class="card module-card"><div class="module-id">'+m.id+'</div><h3>'+esc(m.title)+'</h3>'+tag(m.basis)+'<p>'+esc(m.description)+'</p><div class="chips">'+m.children.map(c=>'<button class="chip" data-node="'+esc(c.id)+'">'+esc(c.title)+'</button>').join('')+'</div></article>').join('')+'</div><div class="grid overview-grid"><article class="card"><h3>先建立最小运行闭环</h3>'+list(DATA.minimum_start)+'</article><article class="card"><h3>什么才算体系开始有效运行</h3>'+list(DATA.acceptance)+'</article></div><article class="card" style="margin-top:18px"><h3>按组织与交付类型选择启用范围</h3><div class="grid">'+DATA.adaptations.map(x=>'<div><b>'+esc(x.name)+'</b><p class="small muted">'+esc(x.rule)+'</p></div>').join('')+'</div></article>';bindNodeLinks($('overview'));}
 function bindNodeLinks(root){root.querySelectorAll('[data-node]').forEach(b=>{b.onclick=()=>selectNode(b.dataset.node);b.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();selectNode(b.dataset.node);}};});}
-function show(view,hash=true){const changed=active!==view;active=view;if(changed)window.scrollTo({top:0,behavior:'instant'});document.querySelectorAll('.view').forEach(x=>x.classList.toggle('active',x.id===view));document.querySelectorAll('.nav button').forEach(x=>x.classList.toggle('active',x.dataset.view===view));if(hash)history.replaceState(null,'','#'+view);}
+function show(view,hash=true){const changed=active!==view;active=view;if(changed)window.scrollTo({top:0,behavior:'instant'});$('view-switch').value=view;document.querySelectorAll('.view').forEach(x=>x.classList.toggle('active',x.id===view));if(hash)history.replaceState(null,'','#'+view);}
 function selectNode(id){if(!index.has(id))return;selected=id;let p=parents.get(id);while(p){opened.add(p);p=parents.get(p);}show('mindmap',false);renderTree();renderNodeDetail();history.replaceState(null,'','#mindmap/'+encodeURIComponent(id));}
 function renderTree(){let count=0;function row(n,depth){count++;const has=n.children.length,isOpen=opened.has(n.id);return'<div class="tree-item level-'+depth+'" data-id="'+esc(n.id)+'"><div class="tree-row '+(selected===n.id?'selected':'')+'">'+(has?'<button class="toggle" data-toggle="'+esc(n.id)+'" aria-expanded="'+isOpen+'" aria-label="'+(isOpen?'折叠':'展开')+esc(n.title)+'">'+(isOpen?'▾':'▸')+'</button>':'<span class="spacer"></span>')+'<button class="tree-title" data-node="'+esc(n.id)+'"><strong>'+esc(n.title)+'</strong>'+(has?'<span class="tree-count">'+n.children.length+'项</span>':'')+'<br>'+tag(n.basis)+'</button></div>'+(has&&isOpen?'<div class="children">'+n.children.map(c=>row(c,depth+1)).join('')+'</div>':'')+'</div>';}$('tree').innerHTML=row(DATA.root,0);$('tree-count').textContent='当前显示 '+count+' / '+index.size+' 个节点';bindNodeLinks($('tree'));$('tree').querySelectorAll('[data-toggle]').forEach(b=>b.onclick=()=>{const id=b.dataset.toggle;opened.has(id)?opened.delete(id):opened.add(id);renderTree();});}
 function renderNodeDetail(){const n=index.get(selected);const mid=moduleFor.get(n.id),mechanisms=DATA.mechanisms.filter(x=>x.module_id===mid);$('node-detail').innerHTML='<div class="locator">'+esc(n.id)+'</div><h2>'+esc(n.title)+'</h2>'+tag(n.basis)+'<p>'+esc(n.description)+'</p><div class="rule small">体系实施状态：设计方案，待试运行。资料支持与本组织已实施是两种不同状态。</div>'+(n.children.length?'<h3>下级内容</h3><div class="chips">'+n.children.map(c=>'<button class="chip" data-node="'+esc(c.id)+'">'+esc(c.title)+'</button>').join('')+'</div>':'')+(mechanisms.length?'<h3>本模块的运行机制</h3><div class="chips">'+mechanisms.map(m=>'<button class="chip" data-mechanism="'+esc(m.id)+'">'+esc(m.name)+'</button>').join('')+'</div>':'')+(n.evidence_inherited_from?'<h3>资料依据</h3><p class="small muted">此节点沿用上级 '+esc(n.evidence_inherited_from)+' 的资料背景；补全的运行规则按依据类型标注。</p>':'<h3>资料依据</h3>')+(n.evidence?.length?n.evidence.map(evidenceMarkup).join(''):'<p class="small muted">依据类型表示资料支持与制度补全的性质；实施情况需由实际运行记录确认。</p>');bindNodeLinks($('node-detail'));$('node-detail').querySelectorAll('[data-mechanism]').forEach(b=>b.onclick=()=>jumpRecord('mechanisms',b.dataset.mechanism));}
@@ -513,7 +540,7 @@ function renderTemplates(){$('templates').innerHTML=title('工作模板与最小
 function renderRollout(){$('rollout').innerHTML=title('先试运行，再决定推广','90天是首轮试点的建议安排，适用于已有内部责任人和试点团队的场景。企业级推广取决于授权、采纳与运行证据；原咨询方案讨论稿的17周范围另作来源记录。')+'<article class="card hero"><h3>试点选择</h3><p>选一个业务目标清楚、产品研发测试可协同、内部负责人愿意承接的团队或业务流。以完整运行一轮、可度量、可交接为试点目标。</p></article><div class="record-grid">'+DATA.rollout.map(x=>record(x,'phase')).join('')+'</div><article class="card" style="margin-top:18px"><h3>试点退出与推广条件</h3>'+list(DATA.acceptance)+'<div class="rule positive">形成运行证据后，由内部负责人独立完成下一轮计划、协调、验收与复盘。未达到条件时继续修正规则和能力，推广决策同时考虑新增团队的承接容量。</div></article>';}
 function renderEvidence(){const s=DATA.scope;$('evidence').innerHTML=title('资料范围、设计补全与待确认事项','每项内容区分资料支持与制度补全，保留适用范围和待确认事项。原始依据存于本地资料；新增角色、门禁、口径与模板作为建议，不表示当前组织已经实施。')+'<article class="card"><h3>这套体系使用了哪些材料</h3><div class="stats">'+[[s.historical_charts,'历史源图'],[s.historical_text_records,'历史去重文字'],[s.current_outline_nodes,'在线大纲节点'],[s.current_flow_texts,'在线流程正文']].map(([n,t])=>'<div class="stat"><b>'+n+'</b><span>'+t+'</span></div>').join('')+'</div><p>当前整合图36主题、13源脑图1531大纲节点、5流程432对象/292正文已经读取。自由主题与摘要240条仅有历史全文；流程图连线拓扑与布局未核验。</p><div class="legend">'+Object.keys(DATA.basis_legend).map(tag).join('')+'</div><p class="small muted">资料支持：有直接材料背景。资料支持＋制度补全：在已有材料上增加运行要素。制度设计建议：为完整闭环新增，需试运行确认。</p></article><h3>进入实施前需要补齐</h3><div class="record-grid">'+DATA.gaps.map(x=>record(x,'gap')).join('')+'</div>';}
 function jumpRecord(view,id){if(view==='mechanisms'){mechanismFilter='all';renderMechanisms();}show(view,false);const el=$('record-'+id);if(el){el.classList.add('row-focus');el.scrollIntoView({behavior:'auto',block:'start'});}history.replaceState(null,'','#'+view+'/'+encodeURIComponent(id));}
-renderOverview();renderMindmap();renderMechanisms();renderGates();renderRoles();renderMetrics();renderTemplates();renderRollout();renderEvidence();$('side-legend').innerHTML=Object.keys(DATA.basis_legend).map(tag).join('');document.querySelectorAll('[data-view]').forEach(b=>b.onclick=()=>show(b.dataset.view));document.querySelector('main').addEventListener('click',e=>{const b=e.target.closest('[data-record-view]');if(b)jumpRecord(b.dataset.recordView,b.dataset.recordId);});function followHash(){const hash=decodeURIComponent(location.hash.slice(1)),[view,id]=hash.split('/');if(view&&$(view)){if(view==='mindmap'&&id)selectNode(id);else if(id)jumpRecord(view,id);else show(view,false);}}window.addEventListener('hashchange',followHash);followHash();window.__pmoSystemTest={data:DATA,index,show,selectNode,jumpRecord,get active(){return active;}};
+renderOverview();renderMindmap();renderMechanisms();renderGates();renderRoles();renderMetrics();renderTemplates();renderRollout();renderEvidence();$('side-legend').innerHTML=Object.keys(DATA.basis_legend).map(tag).join('');$('view-switch').onchange=e=>show(e.target.value);document.querySelector('main').addEventListener('click',e=>{const b=e.target.closest('[data-record-view]');if(b)jumpRecord(b.dataset.recordView,b.dataset.recordId);});function followHash(){const hash=decodeURIComponent(location.hash.slice(1)),[view,id]=hash.split('/');if(view&&$(view)){if(view==='mindmap'&&id)selectNode(id);else if(id)jumpRecord(view,id);else show(view,false);}}window.addEventListener('hashchange',followHash);followHash();window.__pmoSystemTest={data:DATA,index,show,selectNode,jumpRecord,get active(){return active;}};
 </script>
 </body>
 </html>

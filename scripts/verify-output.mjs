@@ -249,6 +249,11 @@ for (const name of ['pmo-system.json','pmo-system.md','pmo-system.xmind','pmo-sy
 }
 assert(!/\bdownload\b|downloads\/|下载|createObjectURL|new Blob|window\.print/iu.test(pmoSystemHtml), 'The PMO page must only provide viewing.');
 assert(/class="home-button" href="\.\/"/u.test(pmoSystemHtml), 'The PMO return button is missing.');
+assert(!/<aside class="side">|<nav class="nav"/u.test(pmoSystemHtml), 'The removed sidebar returned.');
+const viewSwitch = pmoSystemHtml.match(/<select id="view-switch"[^>]*>([\s\S]*?)<\/select>/u)?.[1] || '';
+assert.equal([...viewSwitch.matchAll(/<option value=/gu)].length, 9, 'The compact view switch must reach every section.');
+assert(/<details class="reading-help"><summary>阅读说明<\/summary>/u.test(pmoSystemHtml), 'Reading help must start collapsed.');
+assert(/class="map-branch/u.test(pmoSystemHtml), 'The overview mindmap must contain connected branches.');
 assert(existsSync(path.join(outputRoot, 'fonts/apple-demo-sans.woff2')), 'The PMO site font is missing.');
 const pmoHtml = readFileSync(path.join(outputRoot, 'pmo.html'), 'utf8');
 assert(!/pmoData|PMO 脑图|原版 PMO/u.test(pmoHtml), 'Legacy PMO content must be removed.');
