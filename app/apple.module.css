@@ -1240,6 +1240,16 @@
   }
 }
 
+@media (max-width: 700px) {
+  .header .nav {
+    gap: 0;
+  }
+
+  .header .nav a:not(.pmoNavLink) {
+    display: none;
+  }
+}
+
 @media (max-width: 600px) {
   .storiesIntro .copySentence,
   .leadCopy .copySentence,
