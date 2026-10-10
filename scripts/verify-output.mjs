@@ -245,8 +245,11 @@ assert(!/<header\b/u.test(pmoSystemHtml), 'The removed top header reappeared.');
 assert(!/(?:(?<![a-z])[a-z]:[\\/]|file:\/\/|WorkBuddy|SOW|V5\.7|Claw)/iu.test(pmoSystemHtml), 'Private PMO-system source information remains.');
 assert(!/<(?:script|link)\b[^>]*(?:src|href)="https?:/iu.test(pmoSystemHtml), 'The complete system has an external dependency.');
 for (const name of ['pmo-system.json','pmo-system.md','pmo-system.xmind','pmo-system-backup.zip']) {
-  assert(existsSync(path.join(outputRoot, 'downloads/pmo-system', name)), 'Missing PMO-system backup: ' + name);
+  assert(!existsSync(path.join(outputRoot, 'downloads/pmo-system', name)), 'The view-only site still publishes a download: ' + name);
 }
+assert(!/\bdownload\b|downloads\/|下载|createObjectURL|new Blob|window\.print/iu.test(pmoSystemHtml), 'The PMO page must only provide viewing.');
+assert(/class="home-button" href="\.\/"/u.test(pmoSystemHtml), 'The PMO return button is missing.');
+assert(existsSync(path.join(outputRoot, 'fonts/apple-demo-sans.woff2')), 'The PMO site font is missing.');
 const pmoHtml = readFileSync(path.join(outputRoot, 'pmo.html'), 'utf8');
 assert(!/pmoData|PMO 脑图|原版 PMO/u.test(pmoHtml), 'Legacy PMO content must be removed.');
 assert(/http-equiv="refresh" content="0;url=\.\/pmo-system\.html"/u.test(pmoHtml), 'Legacy PMO URL must redirect to the latest system.');
@@ -335,6 +338,7 @@ console.log(
         nodes: systemNodes.length,
         privateSources: false,
         legacyUrlRedirect: true,
+        viewOnly: true,
       },
     },
     null,
