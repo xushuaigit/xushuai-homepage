@@ -264,7 +264,7 @@ export default function AppleDemoPage() {
             <a href="#approach">工作方式</a>
             <a href="#stories">代表实践</a>
             <a href="./pmo-system.html" className={styles.pmoNavLink}>
-              PMO 体系
+              PMO 体系（持续更新）
             </a>
           </nav>
           <a className={styles.navAction} href="#contact">
