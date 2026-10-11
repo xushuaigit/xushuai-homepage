@@ -19,7 +19,7 @@ assert.match(source, /@font-face[\s\S]*?\.\/fonts\/apple-demo-sans\.woff2/);
 assert(fs.existsSync(path.resolve(path.dirname(pagePath), 'fonts/apple-demo-sans.woff2')), 'The website font must exist.');
 assert.match(source, /href="\.\/"/);
 assert.match(source, /href="\.\/pmo-system\.html"/);
-assert.match(source, /默认账号配置待启用/);
+assert.match(source, /统计仅在本站启用且浏览器允许时运行/);
 assert.match(source, /<noscript>[\s\S]*?JavaScript[\s\S]*?<\/noscript>/);
 
 function makeEnvironment(options = {}) {
