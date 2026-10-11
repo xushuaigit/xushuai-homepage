@@ -33,6 +33,8 @@ jobs:
         run: npm ci
       - name: Check types
         run: npm run typecheck
+      - name: Check anonymous analytics and opt-out
+        run: npm run test:analytics
       - name: Build and verify static output
         run: npm run build
         env:

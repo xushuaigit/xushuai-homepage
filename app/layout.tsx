@@ -12,7 +12,10 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: Readonly<{ children: ReactNode }>) {
   return (
     <html lang="zh-CN">
-      <body>{children}</body>
+      <body>
+        {children}
+        <script defer src={`${basePath}/site-analytics.js`} />
+      </body>
     </html>
   );
 }

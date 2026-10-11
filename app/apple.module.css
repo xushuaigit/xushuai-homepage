@@ -1454,6 +1454,13 @@
   }
 }
 
+.footerLinks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 24px;
+  align-items: center;
+}
+
 @media (max-width: 380px) {
   .signalGrid article {
     padding: 20px;

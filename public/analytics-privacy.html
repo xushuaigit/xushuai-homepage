@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>访问统计说明 · 徐帅个人网站</title>
+    <style>
+      @font-face {
+        font-family: 'Apple Demo Sans';
+        src: url('./fonts/apple-demo-sans.woff2?v=5222d9ca') format('woff2');
+        font-style: normal;
+        font-weight: 100 900;
+        font-display: swap;
+      }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        background: #f5f5f7;
+        color: #1d1d1f;
+        font-family: 'Apple Demo Sans', 'PingFang SC', 'Microsoft YaHei UI', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        font-size: 17px;
+        line-height: 1.75;
+      }
+      .shell { width: min(880px, calc(100% - 48px)); margin-inline: auto; }
+      header { background: #000; color: #fff; }
+      nav { display: flex; min-height: 56px; align-items: center; justify-content: space-between; gap: 20px; }
+      nav a { color: inherit; text-decoration: none; }
+      .brand { font-weight: 650; }
+      .pmo-link { font-size: 14px; color: #d2d2d7; }
+      main { padding-block: clamp(32px, 6vw, 64px); }
+      .eyebrow { margin: 0 0 8px; color: #0071e3; font-size: 14px; font-weight: 650; }
+      h1 { margin: 0 0 16px; font-size: clamp(30px, 5vw, 44px); line-height: 1.25; }
+      .intro { max-width: 44rem; margin: 0 0 28px; color: #6e6e73; }
+      section { margin-top: 20px; padding: clamp(24px, 4vw, 36px); border-radius: 28px; background: #fff; }
+      h2 { margin: 0 0 12px; font-size: clamp(22px, 3vw, 26px); line-height: 1.4; }
+      p { margin: 0 0 14px; overflow-wrap: anywhere; }
+      section p:last-child { margin-bottom: 0; }
+      .note { color: #6e6e73; font-size: 15px; }
+      .controls { display: flex; flex-wrap: wrap; gap: 12px; margin-block: 20px 16px; }
+      button { min-height: 44px; padding: 10px 20px; border: 0; border-radius: 999px; background: #0071e3; color: #fff; font: inherit; font-size: 15px; font-weight: 550; cursor: pointer; }
+      button:hover { background: #0066cc; }
+      button.secondary { background: #eaf3ff; color: #0071e3; }
+      button.secondary:hover { background: #dcecff; }
+      button:disabled { opacity: .55; cursor: default; }
+      a:focus-visible, button:focus-visible { outline: 3px solid #2997ff; outline-offset: 4px; }
+      #analytics-status { padding: 16px 18px; border-radius: 16px; background: #f5f5f7; font-size: 15px; }
+      footer { padding-bottom: 32px; color: #6e6e73; font-size: 14px; }
+      footer a { color: #0071e3; text-decoration: none; }
+      @media (max-width: 520px) {
+        body { font-size: 16px; }
+        .shell { width: calc(100% - 32px); }
+        section { border-radius: 24px; }
+        .controls { flex-direction: column; align-items: stretch; }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <nav class="shell" aria-label="网站导航">
+        <a class="brand" href="./" aria-label="返回个人网站首页">徐帅</a>
+        <a class="pmo-link" href="./pmo-system.html">PMO 体系</a>
+      </nav>
+    </header>
+    <main class="shell">
+      <p class="eyebrow">访问统计</p>
+      <h1>了解网站访问，也尊重你的选择。</h1>
+      <p class="intro">这页说明网站会统计什么，以及如何关闭当前浏览器的统计。默认账号配置待启用；是否实际启用取决于站点配置。</p>
+
+      <section aria-labelledby="collection-title">
+        <h2 id="collection-title">统计哪些信息</h2>
+        <p>配置启用后，个人网站和 PMO 页面使用 Umami 记录匿名的页面访问、功能点击，以及大致地区、设备类型和访问来源，帮助站主了解哪些内容被阅读。</p>
+        <p>统计不收集姓名、所属公司或联系方式内容，也不会把访客匹配到个人身份。点击邮箱或电话链接时，只记录“邮箱点击”或“电话点击”这一类型，不记录邮箱地址、电话号码或你填写的信息。</p>
+        <p class="note">本说明页不加载统计脚本；关闭或恢复按钮也不会向网络发送数据。</p>
+      </section>
+
+      <section aria-labelledby="source-title">
+        <h2 id="source-title">投递来源与查看范围</h2>
+        <p>投递链接使用站主指定的非个人身份来源码，例如 <code>r01</code>，区分渠道或简历版本。来源码仅允许 1–40 个 ASCII 字母、数字、下划线或连字符，且至少包含一个字母；不接受号码形式的长数字。</p>
+        <p>请勿使用姓名、邮箱、手机号或其他个人信息，也不要把这些信息改写或编码成来源码。格式校验无法识别所有个人信息，例如由 ASCII 字母组成的姓名，因此来源码应由站主统一指定。</p>
+        <p>统计后台由站主私人查看，用于了解整体访问情况，不公开访客明细。</p>
+      </section>
+
+      <section aria-labelledby="choice-title">
+        <h2 id="choice-title">当前浏览器的选择</h2>
+        <p>你可以随时关闭或恢复本浏览器的统计偏好。设置只在当前浏览器保存；清除网站数据或更换浏览器后，需要重新设置。</p>
+        <div class="controls">
+          <button id="disable-analytics" type="button" disabled>关闭本浏览器统计</button>
+          <button id="restore-analytics" class="secondary" type="button" disabled>恢复本浏览器统计</button>
+        </div>
+        <p id="analytics-status" role="status" aria-live="polite" aria-atomic="true">当前浏览器设置尚未读取。</p>
+        <p class="note">浏览器启用 Do Not Track（DNT）或 Global Privacy Control（GPC）时，主站会持续停止统计。恢复按钮不会覆盖这些隐私设置，需要在浏览器中单独调整。</p>
+        <noscript><p class="note">当前浏览器已关闭 JavaScript，网站统计不会运行。请开启 JavaScript 后，再使用这两个按钮管理统计偏好。</p></noscript>
+      </section>
+    </main>
+    <footer class="shell"><a href="./">返回个人网站首页</a></footer>
+    <script>
+      (function () {
+        'use strict';
+        var key = 'site-analytics-opt-out';
+        var status = document.getElementById('analytics-status');
+        var disableButton = document.getElementById('disable-analytics');
+        var restoreButton = document.getElementById('restore-analytics');
+
+        function browserPrivacyNote() {
+          var signals = [];
+          if (navigator.doNotTrack === '1') signals.push('DNT');
+          if (navigator.globalPrivacyControl === true) signals.push('GPC');
+          return signals.length ? ' 浏览器已开启 ' + signals.join('、') + '，主站仍会停止统计；恢复按钮不会取消浏览器的隐私设置。' : '';
+        }
+
+        function showPreference() {
+          try {
+            var optedOut = window.localStorage.getItem(key) === '1';
+            status.textContent = (optedOut ? '已关闭本浏览器统计。此设置仅对当前浏览器生效。' : '本浏览器未设置关闭统计；是否启用仍取决于站点配置。') + browserPrivacyNote();
+          } catch (error) {
+            status.textContent = '读取失败：无法读取本浏览器的统计设置。主站在存储不可读时按关闭统计处理。' + browserPrivacyNote();
+          }
+        }
+
+        function savePreference(optOut) {
+          try {
+            var storage = window.localStorage;
+            if (optOut) storage.setItem(key, '1');
+            else storage.removeItem(key);
+            if ((storage.getItem(key) === '1') !== optOut) throw new Error('Preference was not saved.');
+            status.textContent = (optOut ? '已关闭本浏览器统计。此设置仅对当前浏览器生效。' : '已移除本浏览器的关闭设置。是否启用统计仍取决于站点配置。') + browserPrivacyNote();
+          } catch (error) {
+            status.textContent = (optOut ? '关闭失败' : '恢复失败') + '：无法保存本浏览器的统计设置，未确认操作生效。请允许本地存储后重试，或在浏览器中开启 DNT / GPC。' + browserPrivacyNote();
+          }
+        }
+
+        disableButton.addEventListener('click', function () { savePreference(true); });
+        restoreButton.addEventListener('click', function () { savePreference(false); });
+        disableButton.disabled = false;
+        restoreButton.disabled = false;
+        showPreference();
+      })();
+    </script>
+  </body>
+</html>

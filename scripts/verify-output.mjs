@@ -204,6 +204,7 @@ const allowedHtml = new Set([
   'index.html',
   'pmo.html',
   'pmo-system.html',
+  'analytics-privacy.html',
   '404.html',
   '404/index.html',
 ]);
@@ -364,6 +365,19 @@ const faviconHref = [...visibleHtml.matchAll(/<link\b[^>]*>/gu)]
   .match(/\bhref="([^"]+)"/u)?.[1];
 assert(faviconHref, 'The favicon metadata is missing.');
 assertPublishedAsset(faviconHref, 'Favicon');
+const analyticsConfig = JSON.parse(readFileSync(path.join(outputRoot, 'analytics-config.json'), 'utf8'));
+assert.deepEqual(Object.keys(analyticsConfig).sort(), ['enabled', 'websiteId'], 'Only public analytics configuration is permitted.');
+assert.equal(typeof analyticsConfig.enabled, 'boolean');
+assert.equal(typeof analyticsConfig.websiteId, 'string');
+assert(!analyticsConfig.enabled || /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/iu.test(analyticsConfig.websiteId), 'Enabled analytics requires a valid public website UUID.');
+const analyticsScripts = [...html.matchAll(/<script\b[^>]*\bsrc="([^"]*\/site-analytics\.js)"[^>]*>/gu)];
+assert.equal(analyticsScripts.length, 1, 'The homepage must load the analytics wrapper exactly once.');
+assertPublishedAsset(analyticsScripts[0][1], 'Analytics wrapper');
+assert.equal([...pmoSystemHtml.matchAll(/<script\b[^>]*\bsrc="\.\/site-analytics\.js"[^>]*>/gu)].length, 1, 'PMO must load the same wrapper exactly once.');
+const analyticsPrivacy = readFileSync(path.join(outputRoot, 'analytics-privacy.html'), 'utf8');
+assert(!/src="[^"]*(?:site-analytics|umami)/iu.test(analyticsPrivacy), 'The statistics explanation page must not be tracked.');
+assert(!/site-analytics|umami/iu.test(pmoHtml), 'The legacy redirect must not be tracked.');
+assert(/analytics-privacy\.html/u.test(visibleHtml) && /analytics-privacy\.html/u.test(pmoSystemHtml), 'Both content pages must link to the statistics explanation.');
 assert(
   existsSync(path.join(outputRoot, 'fonts/OFL.txt')),
   'The font license is missing.',
@@ -385,6 +399,13 @@ console.log(
       favicon: true,
       static404: true,
       additionalDemos: false,
+      analytics: {
+        enabled: analyticsConfig.enabled,
+        state: analyticsConfig.enabled ? 'configured' : 'disabled-awaiting-account',
+        sameOriginLoader: true,
+        redirectTracked: false,
+        explanationPage: true,
+      },
       mindMap: {
         branches: pmoSystem.modules.length,
         nodes: systemNodes.length,

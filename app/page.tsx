@@ -781,7 +781,10 @@ export default function AppleDemoPage() {
       <footer className={styles.footer}>
         <div className={styles.navShell}>
           <span>© 2026 {homepageDemo.name}</span>
-          <a href="#content">返回顶部</a>
+          <div className={styles.footerLinks}>
+            <a href="./analytics-privacy.html">访问统计说明</a>
+            <a href="#content">返回顶部</a>
+          </div>
         </div>
       </footer>
       <BackToTop />

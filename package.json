@@ -10,7 +10,8 @@
     "dev": "vinext dev --host 127.0.0.1",
     "build": "vinext build && node scripts/verify-output.mjs",
     "verify": "node scripts/verify-output.mjs",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "test:analytics": "node scripts/test-site-analytics.cjs && node scripts/test-analytics-privacy.cjs"
   },
   "dependencies": {
     "lucide-react": "1.31.0",
